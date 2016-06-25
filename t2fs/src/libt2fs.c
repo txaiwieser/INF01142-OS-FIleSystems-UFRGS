@@ -3,7 +3,11 @@
 
 //Informa a identificação dos desenvolvedores
 int identify2 (char *name, int size){
-
+    char id[] = "Rodrigo Lusa-216668/Txai Wieser-";
+    	if (size < sizeof(id))
+    		return -1;
+    	else strncpy2(name, id, sizeof(id));
+    	return 0;
 }
 
 //Função usada para criar um novo arquivo no disco
