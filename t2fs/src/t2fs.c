@@ -1,0 +1,136 @@
+#include "apidisk.h"
+#include "t2fs.h"
+#include "tsfs_aux.h"
+#include <stdlib.h>
+#include <string.h>
+
+
+char cwdPath[1024] = "/";
+
+OPEN_FILE openFiles[20];
+OPEN_DIR openDirs[20];
+int nOpenFiles = 0;
+int nOpenDirs = 0;
+bool partitionInfoInitialized = false;
+
+int TEST_INIT_PARTINFO()
+{
+    if (!partitionInfoInitialized) {
+        if (readSuperblock() != 0) return -1;
+        int i;
+        for (i = 0; i < 20; ++i)
+        {
+            openFiles[i] = (OPEN_FILE) { .open = false } ;
+            openDirs[i] = (OPEN_DIR) { .open = false } ;
+        }
+
+        partitionInfoInitialized = true;
+    }
+    return 0;
+
+}
+
+
+//Informa a identificação dos desenvolvedores
+int identify2 (char *name, int size){
+    char id[] = "Rodrigo Lusa-216668/Txai Wieser-";
+    	if (size < sizeof(id))
+    		return -1;
+    	else strncpy2(name, id, sizeof(id));
+    	return 0;
+}
+
+//Função usada para criar um novo arquivo no disco
+FILE2 create2 (char *filename){
+
+}
+
+//Função usada para remover um arquivo do disco
+int delete2 (char *filename){
+
+}
+
+//Função que abre um arquivo existente no disco
+FILE2 open2 (char *filename){
+
+}
+
+//Função usada para fechar um arquivo
+int close2 (FILE2 handle){
+    if (TEST_INIT_PARTINFO() != 0) return -1;
+    if (handle < 0 || handle >= 20) return -1;
+    nOpenFiles--;
+    openFiles[handle].open = false;
+    return 0;
+}
+
+//Função usada para realizar a leitura de uma certa quantidade de bytes (size) de um arquivo
+int read2 (FILE2 handle, char *buffer, int size){
+
+}
+
+//Função usada para realizar a escrita de uma certa quantidade de bytes (size) de um arquivo
+int write2 (FILE2 handle, char *buffer, int size){
+
+}
+
+//Altera o contador de posição (current pointer) do arquivo
+int seek2 (FILE2 handle, unsigned int offset){
+    if (handle < 0 || handle >= 20) return -1;
+    if (!openFiles[handle].open) return -1;
+    if (offset == -1)
+    {
+        openFiles[handle].offset = openFiles[handle].descriptor.bytesFileSize;
+    }
+    else if (offset >= 0 && offset <= openFiles[handle].descriptor.bytesFileSize)
+    {
+        openFiles[handle].offset = offset;
+    }
+    else
+    {
+        return -1;
+    }
+    return 0;
+}
+
+//Função usada para criar um novo diretorio
+int mkdir2 (char *pathname){
+
+}
+
+//Função usada para remover um diretório existente no disco
+int rmdir2 (char *pathname){
+
+}
+
+//Função que abre um diretório existente no disco
+DIR2 opendir2 (char *pathname){
+
+}
+
+//Função usada para ler as entradas de um diretório
+int readdir2 (DIR2 handle, DIRENT2 *dentry){
+
+}
+
+//Função usada para fechar um arquivo
+int closedir2 (DIR2 handle){
+ if (TEST_INIT_PARTINFO() != 0) return -1;
+    if (handle < MAX_OPEN_FILES || handle >= 20+MAX_OPEN_FILES)
+    {
+        return -1;
+    }
+    nOpenDirs--;
+    openDirs[handle-MAX_OPEN_FILES].open = false;
+    return 0;
+}
+
+//Função usada para alterar o diretório corrente
+int chdir2 (char *pathname){
+
+}
+
+//Função usada paraobter o caminho do diretorio corrente
+int getcwd2 (char *pathname, int size){
+
+}
